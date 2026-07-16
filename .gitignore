@@ -1,0 +1,16 @@
+__pycache__/
+*.egg-info/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+*.pt
+*.pth
+*.ckpt
+*.log
+swanlog/
+training_logs/
+evaluation_results/
+.tmp-*/
+data/generated/
+data/cache/
