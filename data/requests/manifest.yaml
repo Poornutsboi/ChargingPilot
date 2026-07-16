@@ -1,0 +1,23 @@
+train:
+  - charge_request_day_0001_normal.csv
+  - charge_request_day_0002_normal.csv
+  - charge_request_day_0003_low.csv
+  - charge_request_day_0004_normal.csv
+  - charge_request_day_0005_normal.csv
+  - charge_request_day_0006_peak.csv
+  - charge_request_day_0007_normal.csv
+  - charge_request_day_0008_normal.csv
+  - charge_request_day_0010_normal.csv
+  - charge_request_day_0011_normal.csv
+  - charge_request_day_0012_normal.csv
+  - charge_request_day_0015_normal.csv
+  - charge_request_day_0017_normal.csv
+  - charge_request_day_0018_normal.csv
+validation:
+  - charge_request_day_0009_low.csv
+  - charge_request_day_0013_peak.csv
+  - charge_request_day_0014_normal.csv
+test:
+  - charge_request_day_0016_low.csv
+  - charge_request_day_0019_normal.csv
+  - charge_request_day_0020_peak.csv

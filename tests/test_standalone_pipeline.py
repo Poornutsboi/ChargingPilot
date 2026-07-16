@@ -27,3 +27,15 @@ def test_manifest_builder_creates_non_overlapping_splits(tmp_path: Path) -> None
     assert set(manifest) == {"train", "validation", "test"}
     assert all(manifest[split] for split in manifest)
     assert len(set().union(*map(set, manifest.values()))) == 5
+
+
+def test_fixed_request_manifest_references_packaged_request_files() -> None:
+    from chargingpilot.environment.request_manifest import RequestManifest
+    from chargingpilot.paths import repository_root
+
+    root = repository_root()
+    manifest = RequestManifest.load(root / "data" / "requests" / "manifest.yaml", root / "data" / "requests")
+
+    assert len(manifest.train) == 14
+    assert len(manifest.validation) == 3
+    assert len(manifest.test) == 3

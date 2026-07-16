@@ -12,9 +12,9 @@ from chargingpilot.paths import roadmap_links_path, roadmap_nodes_path, reposito
 def main() -> None:
     root = repository_root()
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--requests-dir", type=Path, required=True)
-    parser.add_argument("--manifest", type=Path, required=True)
-    parser.add_argument("--flows", type=Path, required=True)
+    parser.add_argument("--requests-dir", type=Path, default=root / "data" / "requests")
+    parser.add_argument("--manifest", type=Path, default=root / "data" / "requests" / "manifest.yaml")
+    parser.add_argument("--flows", type=Path, default=root / "data" / "roadmap" / "link_24h_flows.csv")
     parser.add_argument("--station-config", type=Path, default=root / "configs" / "setting_72stations_roadmap_pv_ess.yaml")
     parser.add_argument("--output-dir", type=Path, default=root / "artifacts")
     parser.add_argument("--total-decisions", type=int, default=64)
