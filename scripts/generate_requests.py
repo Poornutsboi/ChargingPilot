@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, required=True)
+    parser.add_argument("--name", default="charging_requests.csv")
     parser.add_argument("--days", type=int, default=1)
     parser.add_argument("--requests-per-day", type=int, default=800)
     parser.add_argument("--seed", type=int, default=42)
@@ -28,7 +29,7 @@ def main() -> None:
         [
             "--nodes", str(data_dir / "nodes_final.geojson"),
             "--links", str(data_dir / "links_final.geojson"),
-            "--output", str(args.output_dir / "charging_requests.csv"),
+            "--output", str(args.output_dir / args.name),
             "--days", str(args.days),
             "--requests-per-day", str(args.requests_per_day),
             "--seed", str(args.seed),

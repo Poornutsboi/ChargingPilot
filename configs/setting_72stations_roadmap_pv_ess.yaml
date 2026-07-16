@@ -10,7 +10,7 @@ stations:
 
 renewable:
   pv_indicator: [0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1]
-  pv_power_csv: exps/data/pv_power.csv
+  pv_power_csv: ../data/roadmap/pv_power.csv
   time_column: time
   pv_power_column: pv_power_kw
 
