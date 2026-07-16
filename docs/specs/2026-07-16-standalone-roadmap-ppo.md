@@ -9,16 +9,16 @@ runtime paths from `renewable-aware-split-charging`.
 ## Supported pipeline
 
 ```text
-data/roadmap/nodes_final.geojson + links_final.geojson
-  -> scripts/generate_flows.py
-  -> scripts/generate_requests.py
-  -> scripts/build_manifest.py
+data/roadmap/{nodes_final.geojson, links_final.geojson, link_24h_flows.csv}
+data/requests/{charge_request_day_*.csv, manifest.yaml}
   -> scripts/train_roadmap_ppo.py
   -> artifacts/roadmap_ppo.pt
 ```
 
-Every generated file is placed beneath a caller-selected `--output-dir`; model
-artifacts default below the ignored `artifacts/` directory.
+Request and flow data are fixed, versioned training inputs copied from the
+source project. Model artifacts default below the ignored `artifacts/`
+directory. Synthetic generators remain optional utilities and are not required
+by the training workflow.
 
 ## Runtime boundaries
 
@@ -38,11 +38,11 @@ artifacts default below the ignored `artifacts/` directory.
 
 ## Training inputs
 
-`build_manifest.py` takes generated request CSV files and emits a manifest that
-maps train, validation, and test splits. `train_roadmap_ppo.py` accepts the
-topology, generated flows, request directory, manifest, station configuration,
-and output directory explicitly. It must not contain defaults beginning with
-`datasets/`, `exps/`, or `models/`.
+`data/requests/manifest.yaml` defines the fixed train, validation, and test
+splits. `train_roadmap_ppo.py` defaults to the versioned topology, flows,
+requests, manifest, and station configuration, while allowing explicit
+overrides. It must not contain defaults beginning with `datasets/`, `exps/`,
+or `models/`.
 
 ## Validation
 
