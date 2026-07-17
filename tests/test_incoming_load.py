@@ -232,6 +232,17 @@ class IncomingLoadTrackerTests(TestCase):
         with self.assertRaisesRegex(ValueError, "past due"):
             tracker.summarize(now=10.0)
 
+    def test_past_due_provisional_second_leg_is_excluded_from_summary(self) -> None:
+        tracker = IncomingLoadTracker((2, 5))
+        tracker.add_plan(plan(1, 2, 5), 10.0, 8.0, 9.0, 12.0)
+
+        summary = tracker.summarize(now=10.0)
+
+        np.testing.assert_array_equal(
+            summary.counts,
+            np.array([[1, 0, 0], [0, 0, 0]], dtype=np.float32),
+        )
+
 
 if __name__ == "__main__":
     import unittest

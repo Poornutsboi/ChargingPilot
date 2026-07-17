@@ -189,6 +189,8 @@ class IncomingLoadTracker:
         for record in self._records.values():
             eta = float(record.expected_arrival_time) - now_value
             if eta < 0.0:
+                if record.provisional:
+                    continue
                 raise ValueError(
                     f"incoming record {(record.vehicle_id, record.leg_index)} is past due"
                 )
