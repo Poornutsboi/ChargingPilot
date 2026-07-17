@@ -2,6 +2,7 @@
 
 import copy
 import random
+import warnings
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any, Sequence
@@ -679,7 +680,15 @@ class HierarchicalPPOTrainer:
             np.random.set_state(checkpoint["numpy_rng_state"])
             torch.set_rng_state(checkpoint["torch_cpu_rng_state"].cpu())
             if torch.cuda.is_available() and checkpoint["torch_cuda_rng_state"] is not None:
-                torch.cuda.set_rng_state_all(checkpoint["torch_cuda_rng_state"])
+                try:
+                    torch.cuda.set_rng_state_all(checkpoint["torch_cuda_rng_state"])
+                except TypeError:
+                    warnings.warn(
+                        "checkpoint CUDA RNG state is incompatible with this PyTorch runtime; "
+                        "continuing with the current CUDA RNG state",
+                        RuntimeWarning,
+                        stacklevel=2,
+                    )
             self._minibatch_rng.bit_generator.state = checkpoint["minibatch_rng_state"]
         return checkpoint
 

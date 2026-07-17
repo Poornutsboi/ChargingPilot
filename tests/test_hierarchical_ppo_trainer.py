@@ -3,6 +3,7 @@ import tempfile
 import unittest
 from dataclasses import FrozenInstanceError, replace
 from pathlib import Path
+from unittest.mock import patch
 
 import numpy as np
 import torch
@@ -365,6 +366,35 @@ class HierarchicalPPOTrainerTests(unittest.TestCase):
         self.assertEqual(actual.elapsed_minutes, expected.elapsed_minutes)
         np.testing.assert_array_equal(actual.observation.request, expected.observation.request)
         np.testing.assert_allclose(actual_random, expected_random, rtol=0.0, atol=0.0)
+
+    def test_checkpoint_load_skips_incompatible_cuda_rng_state(self):
+        config = HierarchicalPPOConfig(
+            rollout_steps=1, minibatch_size=1, update_epochs=1, seed=17, device="cpu"
+        )
+        source = HierarchicalPPOTrainer(
+            env=_ProviderEnv(), policy=_TinyPolicy(), config=config
+        )
+        source.collect_rollout()
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "checkpoint.pt"
+            source.save_checkpoint(path)
+            checkpoint = torch.load(path, map_location="cpu", weights_only=False)
+            checkpoint["torch_cuda_rng_state"] = object()
+            torch.save(checkpoint, path)
+
+            resumed = HierarchicalPPOTrainer(
+                env=_ProviderEnv(), policy=_TinyPolicy(), config=config
+            )
+            with patch(
+                "chargingpilot.trainer.hierarchical_ppo_trainer.torch.cuda.is_available",
+                return_value=True,
+            ), patch(
+                "chargingpilot.trainer.hierarchical_ppo_trainer.torch.cuda.set_rng_state_all",
+                side_effect=TypeError("RNG state must be a torch.ByteTensor"),
+            ):
+                resumed.load_checkpoint(path)
+
+        self.assertEqual(resumed.completed_decisions, 1)
 
     def test_resumable_checkpoint_rejects_stateless_episode_factory(self):
         trainer = HierarchicalPPOTrainer(
